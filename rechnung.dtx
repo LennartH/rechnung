@@ -981,6 +981,33 @@
 %    \end{macrocode}
 %  \end{macro}
 %
+%  \begin{macro}{\@RCHust}
+% Beendet eine Tabelle mit Nettopreisen und Umsatzsteuer.
+%    \begin{macrocode}
+\newcommand*\@RCHust{
+  \@RCHsline{\LangNet}{\writeCurrency\@RCHsum}%
+%    \end{macrocode}
+% \[\left\lfloor\frac{\hbox{\LangNet}\cdot\hbox{\LangTaxRate}+50}{100}\right\rfloor\]
+%    \begin{macrocode}
+  \multiply\@RCHmwsti\@RCHstsi
+  \advance\@RCHmwsti50\divide\@RCHmwsti100
+  \multiply\@RCHmwstii\@RCHstsii
+  \advance\@RCHmwstii50\divide\@RCHmwstii100
+  \@RCHmwst\@RCHmwsti\advance\@RCHmwst\@RCHmwstii
+  \if@RCHerm
+    \@RCHsline{zzgl. \@RCHstsii\,\% USt.}{\writeCurrency\@RCHmwstii}%
+  \fi
+  \@RCHsline{zzgl. \@RCHstsi\,\% USt.}{\writeCurrency\@RCHmwsti}%
+  \advance\@RCHsum\@RCHmwst
+  \hrule
+  \vskip\doublerulesep\vskip0.4pt
+  \@RCHsline{\LangTotal}{\writebfCurrency\@RCHsum}%
+  \hrule
+  \writefoot
+}
+%    \end{macrocode}
+%  \end{macro}
+%
 %  \begin{macro}{\@RCHkeineUST}
 % Beendet eine Tabelle mit den Nettopreisen und gibt
 % an, dass die Mehrwertsteuer nach \S19 UStG nicht
@@ -1309,6 +1336,7 @@
   \else\expandafter\if\@RCHtype K \@RCHkeineUST
   \else\expandafter\if\@RCHtype I \@RCHkeineUSTInt
   \else\expandafter\if\@RCHtype E \@RCHeuUST
+  \else\expandafter\if\@RCHtype U \@RCHust
   \else\PackageError{rechnung}{Unbekannter Rechnungstyp `\@RCHtype'}%
   \fi\fi\fi\fi\fi\fi
   \global\@RCHsum\@RCHsum\global\@RCHmwst\@RCHmwst
